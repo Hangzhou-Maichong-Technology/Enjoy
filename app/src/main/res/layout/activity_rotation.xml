@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <Button
+        android:id="@+id/btn_main"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/rotation_main"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/spinner_main"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_vice"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:text="@string/rotation_vice"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/spinner_vice"
+        app:layout_constraintTop_toBottomOf="@+id/btn_main" />
+
+    <Button
+        android:id="@+id/btn_display"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:text="@string/rotation_display"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/spinner_display"
+        app:layout_constraintTop_toBottomOf="@+id/btn_vice" />
+
+    <Spinner
+        android:id="@+id/spinner_main"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="50dp"
+        android:entries="@array/rotation"
+        app:layout_constraintLeft_toRightOf="@+id/btn_main"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinner_vice"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:entries="@array/rotation"
+        app:layout_constraintLeft_toRightOf="@+id/btn_vice"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_main" />
+
+    <Spinner
+        android:id="@+id/spinner_display"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:entries="@array/rotation"
+        app:layout_constraintLeft_toRightOf="@+id/btn_vice"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_vice" />
+
+    <CheckBox
+        android:id="@+id/cb_vice_full"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center_vertical"
+        android:text="副屏满屏显示"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spinner_display" />
+</android.support.constraint.ConstraintLayout>

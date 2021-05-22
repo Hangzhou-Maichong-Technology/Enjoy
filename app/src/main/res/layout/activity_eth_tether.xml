@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <Button
+        android:id="@+id/btn_tether_open"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:text="打开以太网共享"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_tether_close"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:text="关闭以太网共享"
+        app:layout_constraintLeft_toRightOf="@+id/btn_tether_open"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/cb_tether_persist"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:text="重启是否保持打开/关闭状态"
+        app:layout_constraintLeft_toRightOf="@+id/btn_tether_close"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_tether_state"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:text="@string/tether_state"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_tether_open" />
+
+    <TextView
+        android:id="@+id/tv_tether_source"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="以太网共享源: "
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/rg_tether_source"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tether_state" />
+
+    <RadioGroup
+        android:id="@+id/rg_tether_source"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toRightOf="@+id/tv_tether_source"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tether_state">
+
+        <RadioButton
+            android:id="@+id/rb_tether_wifi"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Wi-Fi" />
+
+        <RadioButton
+            android:id="@+id/rb_tether_4g"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="4G" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_get_tether"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:text="获取以太网共享参数"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rg_tether_source" />
+
+    <Button
+        android:id="@+id/btn_set_tether"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:text="保存以太网共享参数"
+        app:layout_constraintLeft_toRightOf="@+id/btn_get_tether"
+        app:layout_constraintTop_toBottomOf="@+id/rg_tether_source" />
+
+    <TextView
+        android:id="@+id/tv_tether_getway"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="网关 IP 地址: "
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/et_tether_gateway"
+        app:layout_constraintTop_toBottomOf="@+id/btn_get_tether" />
+
+    <EditText
+        android:id="@+id/et_tether_gateway"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:digits="0123456789."
+        app:layout_constraintLeft_toRightOf="@+id/tv_tether_getway"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_get_tether" />
+
+    <TextView
+        android:id="@+id/tv_tether_prefix"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="网关掩码长度: "
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/et_tether_prefix"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tether_getway" />
+
+    <EditText
+        android:id="@+id/et_tether_prefix"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:digits="0123456789"
+        app:layout_constraintLeft_toRightOf="@+id/tv_tether_prefix"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tether_getway" />
+
+    <TextView
+        android:id="@+id/tv_tether_dhcp_start"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="网关 DCHP 服务地址池起始值: "
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/et_tether_dhcp_start"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tether_prefix" />
+
+    <EditText
+        android:id="@+id/et_tether_dhcp_start"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:digits="0123456789."
+        app:layout_constraintLeft_toRightOf="@+id/tv_tether_dhcp_start"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tether_prefix" />
+
+    <TextView
+        android:id="@+id/tv_tether_dhcp_end"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="网关 DCHP 服务地址池末尾值: "
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/et_tether_dhcp_end"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tether_dhcp_start" />
+
+    <EditText
+        android:id="@+id/et_tether_dhcp_end"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:digits="0123456789."
+        app:layout_constraintLeft_toRightOf="@+id/tv_tether_dhcp_end"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tether_dhcp_start" />
+
+    <TextView
+        android:id="@+id/tv_tether_dns"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="网关 DNS 地址: "
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/et_tether_dns"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tether_dhcp_end" />
+
+    <EditText
+        android:id="@+id/et_tether_dns"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:digits="0123456789."
+        app:layout_constraintLeft_toRightOf="@+id/tv_tether_dns"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tether_dhcp_end" />
+
+    <Button
+        android:id="@+id/btn_sub_dev"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="获取已分配设备"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tether_dns" />
+
+    <TextView
+        android:id="@+id/tv_sub_dev"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:gravity="center"
+        app:layout_constraintLeft_toRightOf="@+id/btn_sub_dev"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tether_dns" />
+</android.support.constraint.ConstraintLayout>

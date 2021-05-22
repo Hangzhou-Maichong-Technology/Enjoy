@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <CheckBox
+        android:id="@+id/cb_enable"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="启用以太网"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_connect"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:text="@string/eth_state"
+        android:textColor="@color/blue3"
+        android:textSize="@dimen/middle1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cb_enable" />
+
+    <Button
+        android:id="@+id/btn_get_eth"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:text="获取以太网信息"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_connect" />
+
+    <Button
+        android:id="@+id/btn_set_eth"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:text="保存以太网信息"
+        app:layout_constraintLeft_toRightOf="@+id/btn_get_eth"
+        app:layout_constraintTop_toBottomOf="@+id/tv_connect" />
+
+    <TextView
+        android:id="@+id/tv_eth_mode"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="@string/eth_mode"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/sp_eth_mode"
+        app:layout_constraintTop_toBottomOf="@+id/btn_get_eth" />
+
+    <Spinner
+        android:id="@+id/sp_eth_mode"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:entries="@array/eth_mode"
+        app:layout_constraintLeft_toRightOf="@+id/tv_eth_mode"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_get_eth" />
+
+    <TextView
+        android:id="@+id/tv_eth_ipv4"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="@string/eth_ipv4"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/et_eth_ipv4"
+        app:layout_constraintTop_toBottomOf="@+id/tv_eth_mode" />
+
+    <EditText
+        android:id="@+id/et_eth_ipv4"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:digits="0123456789."
+        app:layout_constraintLeft_toRightOf="@+id/tv_eth_ipv4"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_eth_mode" />
+
+    <TextView
+        android:id="@+id/tv_eth_mask"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="@string/eth_mask"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/et_eth_mask"
+        app:layout_constraintTop_toBottomOf="@+id/tv_eth_ipv4" />
+
+    <EditText
+        android:id="@+id/et_eth_mask"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:digits="0123456789."
+        app:layout_constraintLeft_toRightOf="@+id/tv_eth_mask"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_eth_ipv4" />
+
+    <TextView
+        android:id="@+id/tv_eth_gateway"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="@string/eth_getway"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/et_eth_gateway"
+        app:layout_constraintTop_toBottomOf="@+id/tv_eth_mask" />
+
+    <EditText
+        android:id="@+id/et_eth_gateway"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:digits="0123456789."
+        app:layout_constraintLeft_toRightOf="@+id/tv_eth_gateway"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_eth_mask" />
+
+    <TextView
+        android:id="@+id/tv_eth_dns1"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="@string/eth_dns1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/et_eth_dns1"
+        app:layout_constraintTop_toBottomOf="@+id/tv_eth_gateway" />
+
+    <EditText
+        android:id="@+id/et_eth_dns1"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:digits="0123456789."
+        app:layout_constraintLeft_toRightOf="@+id/tv_eth_dns1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_eth_gateway" />
+
+    <TextView
+        android:id="@+id/tv_eth_dns2"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="@string/eth_dns2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/et_eth_dns2"
+        app:layout_constraintTop_toBottomOf="@+id/tv_eth_dns1" />
+
+    <EditText
+        android:id="@+id/et_eth_dns2"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:digits="0123456789."
+        app:layout_constraintLeft_toRightOf="@+id/tv_eth_dns2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_eth_dns1" />
+</android.support.constraint.ConstraintLayout>

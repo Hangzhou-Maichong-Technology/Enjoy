@@ -1,0 +1,3 @@
+include ':enjoySDK'
+include ':app'
+rootProject.name = "Enjoy"

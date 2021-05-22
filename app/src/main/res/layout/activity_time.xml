@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <CheckBox
+        android:id="@+id/cb_auto_date_time"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="时间日期自动校对"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/cb_auto_timezone"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="时区自动校对"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cb_auto_date_time" />
+
+    <CheckBox
+        android:id="@+id/cb_time_format"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="是否使用24小时显示"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cb_auto_timezone" />
+
+    <Button
+        android:id="@+id/btn_time"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:text="设置时间"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cb_time_format" />
+
+    <Button
+        android:id="@+id/btn_date"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:text="设置日期"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_time" />
+
+    <TextView
+        android:id="@+id/tv_timezone"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="时区设置:"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_date" />
+
+    <Spinner
+        android:id="@+id/spinner_timezone"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:entries="@array/time_zone"
+        app:layout_constraintLeft_toRightOf="@+id/tv_timezone"
+        app:layout_constraintTop_toBottomOf="@+id/btn_date" />
+
+    <Button
+        android:id="@+id/btn_ntp"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="NTP 设置:"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_timezone" />
+
+    <EditText
+        android:id="@+id/et_ndp_address"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:entries="@array/time_zone"
+        android:gravity="center"
+        android:hint="NTP 地址"
+        app:layout_constraintLeft_toRightOf="@+id/btn_ntp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_timezone" />
+
+    <EditText
+        android:id="@+id/et_ndp_timeout"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:entries="@array/time_zone"
+        android:gravity="center"
+        android:hint="NTP 超时时间(豪秒)"
+        android:inputType="number"
+        app:layout_constraintLeft_toRightOf="@+id/et_ndp_address"
+        app:layout_constraintTop_toBottomOf="@+id/tv_timezone" />
+</android.support.constraint.ConstraintLayout>

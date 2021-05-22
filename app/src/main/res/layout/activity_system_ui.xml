@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <CheckBox
+        android:id="@+id/cb_status"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="显示状态栏"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/cb_navigation"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="显示导航栏"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cb_status" />
+
+    <CheckBox
+        android:id="@+id/cb_sync"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="设置系统导航栏、状态栏是否永久关闭(同步系统设置，需重启)"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cb_navigation" />
+
+    <Button
+        android:id="@+id/btn_status_expand"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="禁止状态栏下拉"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cb_sync" />
+
+    <Button
+        android:id="@+id/btn_status_notification_icon"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="禁止状态栏通知"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_status_expand" />
+
+    <Button
+        android:id="@+id/btn_status_notification_alert"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="禁止状态栏弹出"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_status_notification_icon" />
+
+    <Button
+        android:id="@+id/btn_status_info"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="隐藏状态栏信息"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_status_notification_alert" />
+
+    <Button
+        android:id="@+id/btn_status_time"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="隐藏状态栏时间"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_status_info" />
+
+    <Button
+        android:id="@+id/btn_navigation_home"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="隐藏导航栏 Home"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_status_time" />
+
+    <Button
+        android:id="@+id/btn_navigation_recent"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="隐藏导航栏 Recent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_navigation_home" />
+
+    <Button
+        android:id="@+id/btn_navigation_back"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="隐藏导航栏 Back"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_navigation_recent" />
+
+    <Button
+        android:id="@+id/btn_enable_all"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:text="取消所有隐藏配置项"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_navigation_back" />
+</android.support.constraint.ConstraintLayout>
