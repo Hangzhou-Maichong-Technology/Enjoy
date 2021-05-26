@@ -22,7 +22,7 @@ allprojects {
 2. 添加 EnjoySdk 依赖
 ```
   // 添加 EnjoySDK gradle 依赖
-  implementation 'com.github.Hangzhou-Maichong-Technology.Enjoy:enjoySDK:1.0.0'
+  implementation 'com.github.Hangzhou-Maichong-Technology:Enjoy:1.0.0'
 ```
 
 ### 本地 aar 依赖
