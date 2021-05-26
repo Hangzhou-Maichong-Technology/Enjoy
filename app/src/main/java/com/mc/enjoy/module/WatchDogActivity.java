@@ -10,12 +10,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-
 import com.blankj.utilcode.util.ToastUtils;
-import com.hzmct.enjoy.R;
-import com.mc.android.enjoy.EnjoyErrorCode;
 import com.mc.android.mcwatchdog.McWatchdogConfig;
-import com.mc.android.mcwatchdog.McWatchdogManager;
+import com.mc.enjoy.R;
+import com.mc.enjoysdk.McWatchDog;
+import com.mc.enjoysdk.result.McResultBool;
+import com.mc.enjoysdk.transform.McErrorCode;
 
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
@@ -36,7 +36,7 @@ public class WatchDogActivity extends AppCompatActivity {
     private Button btnSetConfig;
     private EditText etTimeout;
 
-    private McWatchdogManager mcWatchdogManager;
+    private McWatchDog mcWatchDog;
     private ScheduledFuture kickFuture;
 
     @Override
@@ -55,12 +55,12 @@ public class WatchDogActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        mcWatchdogManager = (McWatchdogManager) getSystemService(McWatchdogManager.MC_WATCHDOG_MANAGER);
+        mcWatchDog = McWatchDog.getInstance(this);
 
-        cbWatchDog.setChecked(mcWatchdogManager.isInited());
-        if (mcWatchdogManager.isInited()) {
+        cbWatchDog.setChecked(mcWatchDog.isInited() == McResultBool.TRUE);
+        if (mcWatchDog.isInited() != McResultBool.TRUE) {
             loopKick();
-            McWatchdogConfig config = mcWatchdogManager.getConfig();
+            McWatchdogConfig config = mcWatchDog.getConfig();
             if (config != null) {
                 etTimeout.setText(String.valueOf(config.getTimeout()));
             }
@@ -72,16 +72,16 @@ public class WatchDogActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    int ret = mcWatchdogManager.init();
+                    int ret = mcWatchDog.init();
                     parseError(ret);
-                    if (mcWatchdogManager.isInited()) {
-                        McWatchdogConfig config = mcWatchdogManager.getConfig();
+                    if (mcWatchDog.isInited() == McResultBool.TRUE) {
+                        McWatchdogConfig config = mcWatchDog.getConfig();
                         if (config != null) {
                             etTimeout.setText(String.valueOf(config.getTimeout()));
                         }
                     }
                 } else {
-                    int ret = mcWatchdogManager.close();
+                    int ret = mcWatchDog.close();
                     parseError(ret);
                 }
             }
@@ -97,7 +97,7 @@ public class WatchDogActivity extends AppCompatActivity {
         btnGetConfig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                McWatchdogConfig mcWatchdogConfig = mcWatchdogManager.getConfig();
+                McWatchdogConfig mcWatchdogConfig = mcWatchDog.getConfig();
                 if (mcWatchdogConfig != null) {
                     etTimeout.setText(String.valueOf(mcWatchdogConfig.getTimeout()));
                 } else {
@@ -123,7 +123,7 @@ public class WatchDogActivity extends AppCompatActivity {
                     mcWatchdogConfig.setTimeout(8);
                 }
 
-                int ret = mcWatchdogManager.setConfig(mcWatchdogConfig);
+                int ret = mcWatchDog.setConfig(mcWatchdogConfig);
                 parseError(ret);
             }
         });
@@ -143,8 +143,8 @@ public class WatchDogActivity extends AppCompatActivity {
             }).scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
-                    if (mcWatchdogManager.isInited()) {
-                        int ret = mcWatchdogManager.kick();
+                    if (mcWatchDog.isInited() == McResultBool.TRUE) {
+                        int ret = mcWatchDog.kick();
                         parseError(ret);
                     }
                 }
@@ -157,7 +157,7 @@ public class WatchDogActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mcWatchdogManager.close();
+        mcWatchDog.close();
 
         if (kickFuture != null) {
             kickFuture.cancel(true);
@@ -167,25 +167,25 @@ public class WatchDogActivity extends AppCompatActivity {
 
     private void parseError(int errorCode) {
         switch (errorCode) {
-            case EnjoyErrorCode.ENJOY_COMMON_SUCCESSFUL:
+            case McErrorCode.ENJOY_COMMON_SUCCESSFUL:
                 ToastUtils.showShort("成功");
                 break;
-            case EnjoyErrorCode.ENJOY_WATCHDOG_MANAGER_ERROR_NOT_INIT:
+            case McErrorCode.ENJOY_WATCHDOG_MANAGER_ERROR_NOT_INIT:
                 ToastUtils.showShort("开门狗未初始化");
                 break;
-            case EnjoyErrorCode.ENJOY_WATCHDOG_MANAGER_ERROR_INIT_AGAIN:
+            case McErrorCode.ENJOY_WATCHDOG_MANAGER_ERROR_INIT_AGAIN:
                 ToastUtils.showShort("看门狗重复初始化");
                 break;
-            case EnjoyErrorCode.ENJOY_WATCHDOG_MANAGER_ERROR_INVALID_TIMEOUT:
+            case McErrorCode.ENJOY_WATCHDOG_MANAGER_ERROR_INVALID_TIMEOUT:
                 ToastUtils.showShort("无效的超时时间");
                 break;
-            case EnjoyErrorCode.ENJOY_WATCHDOG_MANAGER_ERROR_OPEN_DEV:
+            case McErrorCode.ENJOY_WATCHDOG_MANAGER_ERROR_OPEN_DEV:
                 ToastUtils.showShort("打开看门狗节点失败");
                 break;
-            case EnjoyErrorCode.ENJOY_WATCHDOG_MANAGER_ERROR_SET_TIMEOUT_ERROR:
+            case McErrorCode.ENJOY_WATCHDOG_MANAGER_ERROR_SET_TIMEOUT_ERROR:
                 ToastUtils.showShort("配置看门狗超时时间失败");
                 break;
-            case EnjoyErrorCode.ENJOY_COMMON_ERROR_UNKNOWN:
+            case McErrorCode.ENJOY_COMMON_ERROR_UNKNOWN:
             default:
                 ToastUtils.showShort("未知错误");
                 break;

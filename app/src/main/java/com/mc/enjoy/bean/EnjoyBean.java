@@ -1,6 +1,6 @@
 package com.mc.enjoy.bean;
 
-import com.hzmct.enjoy.constant.EnjoyEnum;
+import com.mc.enjoy.constant.EnjoyEnum;
 
 /**
  * @author Woong on 3/3/21
@@ -30,6 +30,4 @@ public class EnjoyBean {
     public void setName(String name) {
         this.name = name;
     }
-
-
 }

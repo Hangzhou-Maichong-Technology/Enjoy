@@ -10,45 +10,28 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.hzmct.enjoy.bean.EnjoyBean;
-import com.hzmct.enjoy.module.BootAnimationActivity;
-import com.hzmct.enjoy.module.EthActivity;
-import com.hzmct.enjoy.module.EthTetherActivity;
-import com.hzmct.enjoy.module.FirmwareActivity;
-import com.hzmct.enjoy.module.HardwareKeyBoardActivity;
-import com.hzmct.enjoy.module.HardwareStatusActivity;
-import com.hzmct.enjoy.module.HomeActivity;
-import com.hzmct.enjoy.module.NetCoexistenceActivity;
-import com.hzmct.enjoy.module.PowerActivity;
-import com.hzmct.enjoy.module.RotationActivity;
-import com.hzmct.enjoy.module.SecureActivity;
-import com.hzmct.enjoy.module.SystemUiActivity;
-import com.hzmct.enjoy.module.TimeActivity;
-import com.hzmct.enjoy.module.WatchDogActivity;
-import com.hzmct.enjoy.module.WhiteAppActivity;
-import com.hzmct.enjoy.permission.PermissionUtil;
-import com.mc.android.enjoy.EnjoySdkInfo;
-import com.mc.android.mcsecure.McSecureManager;
+import com.mc.enjoy.bean.EnjoyBean;
+import com.mc.enjoy.module.BootAnimationActivity;
+import com.mc.enjoy.module.EthActivity;
+import com.mc.enjoy.module.EthTetherActivity;
+import com.mc.enjoy.module.FirmwareActivity;
+import com.mc.enjoy.module.HardwareKeyBoardActivity;
+import com.mc.enjoy.module.HardwareStatusActivity;
+import com.mc.enjoy.module.HomeActivity;
+import com.mc.enjoy.module.NetCoexistenceActivity;
+import com.mc.enjoy.module.PowerActivity;
+import com.mc.enjoy.module.RotationActivity;
+import com.mc.enjoy.module.SecureActivity;
+import com.mc.enjoy.module.SystemUiActivity;
+import com.mc.enjoy.module.TimeActivity;
+import com.mc.enjoy.module.WatchDogActivity;
+import com.mc.enjoy.module.WhiteAppActivity;
+import com.mc.enjoy.permission.PermissionUtil;
+import com.mc.enjoysdk.McSecure;
+import com.mc.enjoysdk.transform.McEnjoySdkInfo;
 
 import java.util.ArrayList;
-
-import static com.hzmct.enjoy.constant.EnjoyEnum.BOOT_ANIMATION;
-import static com.hzmct.enjoy.constant.EnjoyEnum.ETHERNET;
-import static com.hzmct.enjoy.constant.EnjoyEnum.ETH_TETHER;
-import static com.hzmct.enjoy.constant.EnjoyEnum.FIRMWARE_INFO;
-import static com.hzmct.enjoy.constant.EnjoyEnum.HARDWARE_KEYBOARD;
-import static com.hzmct.enjoy.constant.EnjoyEnum.HARDWARE_STATUS;
-import static com.hzmct.enjoy.constant.EnjoyEnum.HOME;
-import static com.hzmct.enjoy.constant.EnjoyEnum.INSTALL;
-import static com.hzmct.enjoy.constant.EnjoyEnum.NET_COEXIST;
-import static com.hzmct.enjoy.constant.EnjoyEnum.POWER;
-import static com.hzmct.enjoy.constant.EnjoyEnum.ROTATION;
-import static com.hzmct.enjoy.constant.EnjoyEnum.SECURE;
-import static com.hzmct.enjoy.constant.EnjoyEnum.SYSTEM_UI;
-import static com.hzmct.enjoy.constant.EnjoyEnum.TIME;
-import static com.hzmct.enjoy.constant.EnjoyEnum.WATCH_DOG;
-
+import static com.mc.enjoy.constant.EnjoyEnum.*;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -119,17 +102,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initSecure() {
-        McSecureManager mcSecureManager = (McSecureManager) getSystemService(McSecureManager.MC_SECURE_MANAGER);
-        int ret = mcSecureManager.setSecurePasswd("Abc12345","Abc12345");
+        McSecure mcSecure = McSecure.getInstance(this);
+        int ret = mcSecure.setSecurePasswd("Abc12345","Abc12345");
         Log.i(TAG, "setSecurePasswd == " + ret);
-        mcSecureManager.registSafeProgram("Abc12345");
+        mcSecure.registSafeProgram("Abc12345");
     }
 
     @SuppressLint("StringFormatMatches")
     private void initEnjoyVersion() {
-        tvEnjoySdkVersion.setText(String.format(getString(R.string.enjoy_sdk_version, EnjoySdkInfo.SDK_VERSION)));
-        tvEnjoyVersion.setText(String.format(getString(R.string.enjoy_version, EnjoySdkInfo.VERSION)));
-        tvEnjoyCompatibleAndroidSdk.setText(String.format(getString(R.string.enjoy_android_sdk, EnjoySdkInfo.COMPATIBLE_ANDROID_SDK)));
+        tvEnjoySdkVersion.setText(String.format(getString(R.string.enjoy_sdk_version, McEnjoySdkInfo.SDK_VERSION)));
+        tvEnjoyVersion.setText(String.format(getString(R.string.enjoy_version, McEnjoySdkInfo.VERSION)));
+        tvEnjoyCompatibleAndroidSdk.setText(String.format(getString(R.string.enjoy_android_sdk, McEnjoySdkInfo.COMPATIBLE_ANDROID_SDK)));
     }
 
     private class EnjoyAdapter extends RecyclerView.Adapter {

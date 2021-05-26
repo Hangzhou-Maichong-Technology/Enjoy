@@ -1,15 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.mc.enjoy"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -19,6 +18,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                //这里修改apk文件名
+                outputFileName = "EnjoySDKDemo-v${versionName}-${versionCode}.apk"
+            }
     }
 }
 
@@ -30,5 +37,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    implementation project(":enjoySDK")
+    implementation files('libs/enjoySDK.aar')
+//    implementation project(":enjoySDK")
+
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.blankj:utilcode:1.30.5'
+    implementation 'com.contrarywind:Android-PickerView:4.1.9'
 }

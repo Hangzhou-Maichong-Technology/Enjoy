@@ -3,7 +3,8 @@ package com.mc.enjoy;
 import android.app.Application;
 import android.util.Log;
 
-import com.mc.enjoyutil.EnjoyUtil;
+import com.mc.enjoysdk.util.EnjoyUtil;
+
 
 /**
  * @author Woong on 1/30/21

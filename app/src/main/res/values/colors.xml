@@ -1,6 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorPrimary">#05216B</color>
+    <color name="colorPrimaryDark">#0948F1</color>
+    <color name="colorAccent">#88A8FE</color>
+
+    <color name="transparent">#00000000</color>
+
+    <color name="blue1">#05216B</color>
+    <color name="blue2">#0734AF</color>
+    <color name="blue3">#0948F1</color>
+    <color name="blue4">#4073FD</color>
+    <color name="blue5">#88A8FE</color>
+
+    <color name="black1">#000000</color>
+    <color name="black2">#333333</color>
+    <color name="black3">#666666</color>
+    <color name="black4">#999999</color>
+    <color name="black5">#DDDDDD</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="orange1">#7C4E07</color>
+    <color name="orange2">#B57109</color>
+    <color name="orange3">#F29709</color>
+    <color name="orange4">#FAB140</color>
+    <color name="orange5">#FBCA7D</color>
+
+    <color name="red1">#76130A</color>
+    <color name="red2">#B41F10</color>
+    <color name="red3">#F32A17</color>
+    <color name="red4">#FD5C4C</color>
+    <color name="red5">#FD5C4C</color>
+
+    <color name="green1">#045608</color>
+    <color name="green2">#05760C</color>
+    <color name="green3">#06960E</color>
+    <color name="green4">#4DB752</color>
+    <color name="green5">#8AD08E</color>
+
+    <color name="display0">#800080</color>
+    <color name="display1">#ff0000</color>
+    <color name="display2">#00ff00</color>
+    <color name="display3">#0000ff</color>
+    <color name="display4">#ffffff</color>
+    <color name="display5">#000000</color>
+    <color name="display6">#797979</color>
+    <color name="display7">#F4DE12</color>
 </resources>

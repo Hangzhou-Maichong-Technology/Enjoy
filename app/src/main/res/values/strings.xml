@@ -1,3 +1,27 @@
 <resources>
-    <string name="app_name">Enjoy</string>
+    <string name="app_name">EnjoySdk Demo</string>
+    <string name="rotation_main">获取主屏幕角度</string>
+    <string name="rotation_vice">获取副屏幕角度</string>
+    <string name="rotation_display">获取及时旋转角度</string>
+    <string name="enjoy_sdk_version">EnjoySdk 主版本号: %1$d</string>
+    <string name="enjoy_version">EnjoySdk 版本: %1$s</string>
+    <string name="enjoy_android_sdk">EnjoySdk 适配 Android 版本: %1$s</string>
+    <string name="eth_mode">以太网拨号模式:</string>
+    <string name="eth_ipv4">ipV4 地址:</string>
+    <string name="eth_mask">子网掩码:</string>
+    <string name="eth_getway">网关:</string>
+    <string name="eth_dns1">DNS 1:</string>
+    <string name="eth_dns2">DNS 2:</string>
+    <string name="eth_state">以太网状态: %1$s</string>
+    <string name="factory">供应商 : %1$s</string>
+    <string name="product">产品型号 : %1$s</string>
+    <string name="special">定制信息 : %1$s</string>
+    <string name="cpu_type">CPU型号 : %1$s</string>
+    <string name="android_version">Android版本 : %1$s</string>
+    <string name="firmware_version">固件版本 : %1$s</string>
+    <string name="firmware_code">固件版本号 : %1$d</string>
+    <string name="tether_state">以太网共享状态: %1$s</string>
+    <string name="up_time">系统运行时间: %1$d ms, 即 %2$s</string>
+    <string name="cpu_temperature">CPU 温度: %1$.2f</string>
+    <string name="cpu_utilization">CPU 使用率: %1$.2f %%</string>
 </resources>

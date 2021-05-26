@@ -12,14 +12,14 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
-
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.hzmct.enjoy.R;
-import com.mc.android.enjoy.EnjoyErrorCode;
-import com.mc.android.mcinstall.McInstallManager;
 import com.mc.android.mcinstall.McWhiteApp;
+import com.mc.enjoy.R;
+import com.mc.enjoysdk.McInstall;
+import com.mc.enjoysdk.result.McResultBool;
+import com.mc.enjoysdk.transform.McErrorCode;
 
 import java.util.ArrayList;
 
@@ -37,7 +37,7 @@ public class WhiteAppActivity extends AppCompatActivity {
     private Button btnWhiteList;
     private TextView tvWhiteList;
 
-    private McInstallManager mcInstallManager;
+    private McInstall mcInstall;
     private ArrayList<McWhiteApp> mcWhiteApps = new ArrayList<>();
 
     @Override
@@ -63,14 +63,14 @@ public class WhiteAppActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        mcInstallManager = (McInstallManager) getSystemService(McInstallManager.MC_INSTALL);
-        Log.i(TAG, "whiteApps isEnable == " + mcInstallManager.isEnable());
-        cbEnable.setChecked(mcInstallManager.isEnable());
+        mcInstall = McInstall.getInstance(this);
+        Log.i(TAG, "whiteApps isEnable == " + mcInstall.isEnable());
+        cbEnable.setChecked(mcInstall.isEnable() == McResultBool.TRUE);
 
-        LogUtils.i(TAG, "this is allowInstall == " + mcInstallManager.isInstallAllow(AppUtils.getAppPackageName())
-                + ", isAllowUninstall == " + mcInstallManager.isUninstallAllow(AppUtils.getAppPackageName())
-                + ", isOpenAfterInstall == " + mcInstallManager.isOpenAfterInstall(AppUtils.getAppPackageName())
-                + ", installMode == " + mcInstallManager.getInstallMode(AppUtils.getAppPackageName()));
+        LogUtils.i(TAG, "this is allowInstall == " + mcInstall.isInstallAllow(AppUtils.getAppPackageName())
+                + ", isAllowUninstall == " + mcInstall.isUninstallAllow(AppUtils.getAppPackageName())
+                + ", isOpenAfterInstall == " + mcInstall.isOpenAfterInstall(AppUtils.getAppPackageName())
+                + ", installMode == " + mcInstall.getInstallMode(AppUtils.getAppPackageName()));
 
         getWhiteApps();
     }
@@ -79,7 +79,7 @@ public class WhiteAppActivity extends AppCompatActivity {
         cbEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                int ret = mcInstallManager.whiteListSwitch(isChecked);
+                int ret = mcInstall.whiteListSwitch(isChecked);
                 parseError(ret);
             }
         });
@@ -109,7 +109,7 @@ public class WhiteAppActivity extends AppCompatActivity {
                 app.setOpenAfterInstall(cbOpenAfterInstall.isChecked());
                 mcWhiteApps.add(app);
 
-                int ret = mcInstallManager.addWhiteList(mcWhiteApps);
+                int ret = mcInstall.addWhiteList(mcWhiteApps);
                 parseError(ret);
                 getWhiteApps();
             }
@@ -128,7 +128,7 @@ public class WhiteAppActivity extends AppCompatActivity {
                 app.setPackageName(etPackageName.getText().toString().trim());
                 mcWhiteApps.add(app);
 
-                int ret = mcInstallManager.removeWhiteList(mcWhiteApps);
+                int ret = mcInstall.removeWhiteList(mcWhiteApps);
                 parseError(ret);
                 getWhiteApps();
             }
@@ -144,7 +144,7 @@ public class WhiteAppActivity extends AppCompatActivity {
 
     private void getWhiteApps() {
         mcWhiteApps.clear();
-        mcWhiteApps.addAll(mcInstallManager.getWhiteList());
+        mcWhiteApps.addAll(mcInstall.getWhiteList());
 
         StringBuilder s = new StringBuilder();
         for (McWhiteApp app : mcWhiteApps) {
@@ -160,16 +160,16 @@ public class WhiteAppActivity extends AppCompatActivity {
 
     private void parseError(int errorCode) {
         switch (errorCode) {
-            case EnjoyErrorCode.ENJOY_COMMON_SUCCESSFUL:
+            case McErrorCode.ENJOY_COMMON_SUCCESSFUL:
                 ToastUtils.showShort("成功");
                 break;
-            case EnjoyErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
+            case McErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
                 ToastUtils.showShort("应用白名单服务未启动");
                 break;
-            case EnjoyErrorCode.ENJOY_INSTALL_MANAGER_ERROR_WHITE_ADD:
+            case McErrorCode.ENJOY_INSTALL_MANAGER_ERROR_WHITE_ADD:
                 ToastUtils.showShort("添加白名单失败");
                 break;
-            case EnjoyErrorCode.ENJOY_INSTALL_MANAGER_ERROR_WHITE_REMOVE:
+            case McErrorCode.ENJOY_INSTALL_MANAGER_ERROR_WHITE_REMOVE:
                 ToastUtils.showShort("从白名单中移除失败");
                 break;
             default:

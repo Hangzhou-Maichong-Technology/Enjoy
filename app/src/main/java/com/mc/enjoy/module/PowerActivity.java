@@ -5,11 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-
 import com.blankj.utilcode.util.ToastUtils;
-import com.hzmct.enjoy.R;
-import com.mc.android.enjoy.EnjoyErrorCode;
-import com.mc.android.mcpower.McPowerManager;
+import com.mc.enjoy.R;
+import com.mc.enjoysdk.McPower;
+import com.mc.enjoysdk.transform.McErrorCode;
 
 /**
  * @author Woong on 1/27/21
@@ -22,7 +21,7 @@ public class PowerActivity extends AppCompatActivity {
     private Button btnDialogShutdown;
     private Button btnShutdown;
 
-    private McPowerManager mcPowerManager;
+    private McPower mcPower;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,7 +32,7 @@ public class PowerActivity extends AppCompatActivity {
         btnDialogShutdown = findViewById(R.id.btn_dialog_shutdown);
         btnShutdown = findViewById(R.id.btn_shutdown);
 
-        mcPowerManager = (McPowerManager) getSystemService(McPowerManager.MC_POWER_MANAGER);
+        mcPower = McPower.getInstance(this);
 
         initListener();
     }
@@ -42,7 +41,7 @@ public class PowerActivity extends AppCompatActivity {
         btnReboot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int ret = mcPowerManager.reboot();
+                int ret = mcPower.reboot();
                 parseError(ret);
             }
         });
@@ -50,7 +49,7 @@ public class PowerActivity extends AppCompatActivity {
         btnDialogShutdown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int ret = mcPowerManager.shutdown(true);
+                int ret = mcPower.shutdown(true);
                 parseError(ret);
             }
         });
@@ -58,7 +57,7 @@ public class PowerActivity extends AppCompatActivity {
         btnShutdown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int ret = mcPowerManager.shutdown(false);
+                int ret = mcPower.shutdown(false);
                 parseError(ret);
             }
         });
@@ -66,10 +65,10 @@ public class PowerActivity extends AppCompatActivity {
 
     private void parseError(int errorCode) {
         switch (errorCode) {
-            case EnjoyErrorCode.ENJOY_COMMON_SUCCESSFUL:
+            case McErrorCode.ENJOY_COMMON_SUCCESSFUL:
                 ToastUtils.showShort("成功");
                 break;
-            case EnjoyErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
+            case McErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
                 ToastUtils.showShort("电源服务错误");
                 break;
             default:

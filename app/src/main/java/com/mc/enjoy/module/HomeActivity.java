@@ -12,10 +12,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.hzmct.enjoy.R;
-import com.mc.android.enjoy.EnjoyErrorCode;
-import com.mc.android.mchomemanager.McHomeManager;
-import com.mc.android.mcpower.McPowerManager;
+import com.mc.enjoy.R;
+import com.mc.enjoysdk.McHome;
+import com.mc.enjoysdk.McPower;
+import com.mc.enjoysdk.transform.McErrorCode;
 
 /**
  * @author Woong on 3/3/21
@@ -30,8 +30,8 @@ public class HomeActivity extends AppCompatActivity {
     private TextView tvLauncher;
     private EditText etLauncher;
 
-    private McHomeManager mcHomeManager;
-    private McPowerManager mcPowerManager;
+    private McHome mcHome;
+    private McPower mcPower;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,10 +44,10 @@ public class HomeActivity extends AppCompatActivity {
         tvLauncher = findViewById(R.id.tv_launcher);
         etLauncher = findViewById(R.id.et_launcher);
 
-        mcHomeManager = (McHomeManager) getSystemService(McHomeManager.MC_HOMEMANAGER_SERVICE);
-        mcPowerManager = (McPowerManager) getSystemService(McPowerManager.MC_POWER_MANAGER);
+        mcHome = McHome.getInstance(this);
+        mcPower = McPower.getInstance(this);
 
-        tvLauncher.setText(mcHomeManager.getHomePackage());
+        tvLauncher.setText(mcHome.getHomePackage());
 
         initListener();
     }
@@ -56,7 +56,7 @@ public class HomeActivity extends AppCompatActivity {
         btnRawLauncher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int ret = mcHomeManager.startRawLauncher();
+                int ret = mcHome.startRawLauncher();
                 parseError(ret);
             }
         });
@@ -64,7 +64,7 @@ public class HomeActivity extends AppCompatActivity {
         btnGetLauncher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvLauncher.setText(mcHomeManager.getHomePackage());
+                tvLauncher.setText(mcHome.getHomePackage());
             }
         });
 
@@ -76,10 +76,10 @@ public class HomeActivity extends AppCompatActivity {
                     return;
                 }
 
-                int ret = mcHomeManager.setHomePackage(etLauncher.getText().toString().trim());
+                int ret = mcHome.setHomePackage(etLauncher.getText().toString().trim());
                 parseError(ret);
 
-                if (ret == EnjoyErrorCode.ENJOY_COMMON_SUCCESSFUL) {
+                if (ret == McErrorCode.ENJOY_COMMON_SUCCESSFUL) {
                     new AlertDialog.Builder(HomeActivity.this)
                             .setTitle("是否重启查看桌面应用？")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -91,7 +91,7 @@ public class HomeActivity extends AppCompatActivity {
                             .setPositiveButton("重启", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    mcPowerManager.reboot();
+                                    mcPower.reboot();
                                 }
                             })
                             .show();
@@ -102,16 +102,16 @@ public class HomeActivity extends AppCompatActivity {
 
     private void parseError(int errorCode) {
         switch (errorCode) {
-            case EnjoyErrorCode.ENJOY_COMMON_SUCCESSFUL:
+            case McErrorCode.ENJOY_COMMON_SUCCESSFUL:
                 ToastUtils.showShort("成功");
                 break;
-            case EnjoyErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
+            case McErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
                 ToastUtils.showShort("服务为启动");
                 break;
-            case EnjoyErrorCode.ENJOY_COMMON_ERROR_WRITE_SETTINGS_ERROR:
+            case McErrorCode.ENJOY_COMMON_ERROR_WRITE_SETTINGS_ERROR:
                 ToastUtils.showShort("写入 Setting 数据库错误");
                 break;
-            case EnjoyErrorCode.ENJOY_COMMON_ERROR_UNKNOWN:
+            case McErrorCode.ENJOY_COMMON_ERROR_UNKNOWN:
             default:
                 ToastUtils.showShort("未知错误");
                 break;

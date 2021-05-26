@@ -3,9 +3,8 @@ package com.mc.enjoy.module;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
-
-import com.hzmct.enjoy.R;
-import com.mc.android.mcfirmwareinfo.McFirmwareInfoManager;
+import com.mc.enjoy.R;
+import com.mc.enjoysdk.McFirmwareInfo;
 
 public class FirmwareActivity extends AppCompatActivity {
     private static final String TAG = "FirmwareActivity";
@@ -18,7 +17,7 @@ public class FirmwareActivity extends AppCompatActivity {
     TextView tvFirmwareVersion;
     TextView tvFirmwareCode;
 
-    private McFirmwareInfoManager mcFirmwareInfoManager;
+    private McFirmwareInfo mcFirmwareInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +32,14 @@ public class FirmwareActivity extends AppCompatActivity {
         tvFirmwareVersion = findViewById(R.id.tv_firmware_version);
         tvFirmwareCode = findViewById(R.id.tv_firmware_code);
 
-        mcFirmwareInfoManager = (McFirmwareInfoManager) getSystemService(McFirmwareInfoManager.MC_FIRMWARE_INFO_MANAGER);
+        mcFirmwareInfo = McFirmwareInfo.getInstance(this);
 
-        tvFactory.setText(String.format(getResources().getString(R.string.factory), mcFirmwareInfoManager.getFactoryInfo()));
-        tvProduct.setText(String.format(getResources().getString(R.string.product), mcFirmwareInfoManager.getProductInfo()));
-        tvSpecial.setText(String.format(getResources().getString(R.string.special), mcFirmwareInfoManager.getSpecialInfo()));
-        tvCpuType.setText(String.format(getResources().getString(R.string.cpu_type), mcFirmwareInfoManager.getCpuTypeInfo()));
-        tvAndroidVersion.setText(String.format(getResources().getString(R.string.android_version), mcFirmwareInfoManager.getAndroidVersionInfo()));
-        tvFirmwareVersion.setText(String.format(getResources().getString(R.string.firmware_version), mcFirmwareInfoManager.getFirmwareVersion()));
-        tvFirmwareCode.setText(String.format(getResources().getString(R.string.firmware_code), mcFirmwareInfoManager.getFirmwareVersionCode()));
+        tvFactory.setText(String.format(getResources().getString(R.string.factory), mcFirmwareInfo.getFactoryInfo()));
+        tvProduct.setText(String.format(getResources().getString(R.string.product), mcFirmwareInfo.getProductInfo()));
+        tvSpecial.setText(String.format(getResources().getString(R.string.special), mcFirmwareInfo.getSpecialInfo()));
+        tvCpuType.setText(String.format(getResources().getString(R.string.cpu_type), mcFirmwareInfo.getCpuTypeInfo()));
+        tvAndroidVersion.setText(String.format(getResources().getString(R.string.android_version), mcFirmwareInfo.getAndroidVersionInfo()));
+        tvFirmwareVersion.setText(String.format(getResources().getString(R.string.firmware_version), mcFirmwareInfo.getFirmwareVersion()));
+        tvFirmwareCode.setText(String.format(getResources().getString(R.string.firmware_code), mcFirmwareInfo.getFirmwareVersionCode()));
     }
 }

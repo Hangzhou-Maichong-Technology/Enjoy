@@ -5,11 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
-
-import com.hzmct.enjoy.R;
 import com.mc.android.mchardwarestatusmanager.McCpuStatus;
-import com.mc.android.mchardwarestatusmanager.McHardwareStatusManager;
-
+import com.mc.enjoy.R;
+import com.mc.enjoysdk.McHardwareStatus;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
@@ -27,8 +25,8 @@ public class HardwareStatusActivity extends AppCompatActivity {
     private TextView tvCpuTemperature;
     private TextView tvCpuUtilization;
 
-    private McHardwareStatusManager mcHardwareStatusManager;
     private ScheduledFuture hardwareStatusFuture;
+    private McHardwareStatus mcHardwareStatus;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,7 +37,7 @@ public class HardwareStatusActivity extends AppCompatActivity {
         tvCpuTemperature = findViewById(R.id.tv_cpu_temperature);
         tvCpuUtilization = findViewById(R.id.tv_cpu_utilization);
 
-        mcHardwareStatusManager = (McHardwareStatusManager) getSystemService(McHardwareStatusManager.MC_HARDWARESTATUSMANAGER_SERVICE);
+        mcHardwareStatus = McHardwareStatus.getInstance(this);
 
         loopHardwareState();
     }
@@ -61,8 +59,8 @@ public class HardwareStatusActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            McCpuStatus mcCpuStatus = mcHardwareStatusManager.getCPUStatus();
-                            long upTime = mcHardwareStatusManager.getUpTime();
+                            McCpuStatus mcCpuStatus = mcHardwareStatus.getCPUStatus();
+                            long upTime = mcHardwareStatus.getUpTime();
 
                             tvUpTime.setText(String.format(getResources().getString(R.string.up_time),
                                     upTime, formatTime(upTime)));

@@ -16,12 +16,14 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.hzmct.enjoy.R;
-import com.mc.android.enjoy.EnjoyErrorCode;
 import com.mc.android.mcethtether.ISubnetDevObserver;
 import com.mc.android.mcethtether.McEthTetherConfig;
-import com.mc.android.mcethtether.McEthTetherManager;
+import com.mc.enjoysdk.result.McResultBool;
+import com.mc.enjoysdk.transform.McErrorCode;
+import com.mc.enjoysdk.transform.McEthTetherState;
 import com.mc.android.mcethtether.McEthTetherSubDev;
+import com.mc.enjoy.R;
+import com.mc.enjoysdk.McEthTether;
 
 import java.util.ArrayList;
 import java.util.TimerTask;
@@ -54,7 +56,8 @@ public class EthTetherActivity extends AppCompatActivity {
     private Button btnSubDev;
     private TextView tvSubDev;
 
-    private McEthTetherManager mcEthTetherManager;
+    private McEthTetherState mcEthTetherManager;
+    private McEthTether mcEthTether;
     private ScheduledFuture tetherStateFuture;
 
     private ISubnetDevObserver iSubnetDevObserver = new ISubnetDevObserver.Stub() {
@@ -103,9 +106,9 @@ public class EthTetherActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        mcEthTetherManager = (McEthTetherManager) getSystemService(McEthTetherManager.MC_ETH_TETHER_MANAGER);
-        mcEthTetherManager.registerObserver(iSubnetDevObserver);
-        cbTetherPersist.setChecked(mcEthTetherManager.isEthTetherPersistent());
+        mcEthTether = McEthTether.getInstance(this);
+        mcEthTether.registerObserver(iSubnetDevObserver);
+        cbTetherPersist.setChecked(mcEthTether.isEthTetherPersistent() == McResultBool.TRUE);
 
         loopTetherState();
         updateTetherFrom();
@@ -117,7 +120,7 @@ public class EthTetherActivity extends AppCompatActivity {
         btnTetherOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int ret = mcEthTetherManager.enableEthTether(true, cbTetherPersist.isChecked());
+                int ret = mcEthTether.enableEthTether(true, cbTetherPersist.isChecked());
                 parseError(ret);
             }
         });
@@ -125,7 +128,7 @@ public class EthTetherActivity extends AppCompatActivity {
         btnTetherClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int ret = mcEthTetherManager.enableEthTether(false, cbTetherPersist.isChecked());
+                int ret = mcEthTether.enableEthTether(false, cbTetherPersist.isChecked());
                 parseError(ret);
             }
         });
@@ -135,10 +138,10 @@ public class EthTetherActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.rb_tether_wifi:
-                        mcEthTetherManager.selectEthTetherFrom(ConnectivityManager.TYPE_WIFI);
+                        mcEthTether.selectEthTetherFrom(ConnectivityManager.TYPE_WIFI);
                         break;
                     case R.id.rb_tether_4g:
-                        mcEthTetherManager.selectEthTetherFrom(ConnectivityManager.TYPE_MOBILE);
+                        mcEthTether.selectEthTetherFrom(ConnectivityManager.TYPE_MOBILE);
                         break;
                     default:
                         break;
@@ -162,7 +165,7 @@ public class EthTetherActivity extends AppCompatActivity {
                 mcEthTetherConfig.setDhcpStartAddr(etTetherDhcpStart.getText().toString().trim());
                 mcEthTetherConfig.setDhcpEndAddr(etTetherDchpEnd.getText().toString().trim());
                 mcEthTetherConfig.setDnsAddr(etTetherDns.getText().toString().trim());
-                mcEthTetherManager.setEthTetherConfig(mcEthTetherConfig);
+                mcEthTether.setEthTetherConfig(mcEthTetherConfig);
             }
         });
 
@@ -175,7 +178,7 @@ public class EthTetherActivity extends AppCompatActivity {
     }
 
     private void updateTetherFrom() {
-        int tetherFrom = mcEthTetherManager.getEthTetherFrom();
+        int tetherFrom = mcEthTether.getEthTetherFrom();
         if (tetherFrom == ConnectivityManager.TYPE_MOBILE) {
             rbTether4G.setChecked(true);
         } else if (tetherFrom == ConnectivityManager.TYPE_WIFI) {
@@ -184,7 +187,7 @@ public class EthTetherActivity extends AppCompatActivity {
     }
 
     private void updateSubDev() {
-        ArrayList<McEthTetherSubDev> devs = (ArrayList<McEthTetherSubDev>) mcEthTetherManager.getEthSubDevList();
+        ArrayList<McEthTetherSubDev> devs = (ArrayList<McEthTetherSubDev>) mcEthTether.getEthSubDevList();
 
         if (devs != null) {
             StringBuilder s = new StringBuilder();
@@ -198,7 +201,7 @@ public class EthTetherActivity extends AppCompatActivity {
     }
 
     private void getTetherConfig() {
-        McEthTetherConfig mcEthTetherConfig = mcEthTetherManager.getEthTetherConfig();
+        McEthTetherConfig mcEthTetherConfig = mcEthTether.getEthTetherConfig();
         if (mcEthTetherConfig != null) {
             etTetherGateway.setText(mcEthTetherConfig.getGatewayAddr());
             etTetherPrefix.setText(String.valueOf(mcEthTetherConfig.getPrefixLength()));
@@ -226,14 +229,14 @@ public class EthTetherActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             String state = "";
-                            switch (mcEthTetherManager.getEthTetherState()) {
-                                case McEthTetherManager.TETHER_STATE_AVAILABLE:
+                            switch (mcEthTether.getEthTetherState()) {
+                                case McEthTetherState.TETHER_STATE_AVAILABLE:
                                     state = "可以共享但未共享";
                                     break;
-                                case McEthTetherManager.TETHER_STATE_TETHERED:
+                                case McEthTetherState.TETHER_STATE_TETHERED:
                                     state = "已共享";
                                     break;
-                                case McEthTetherManager.TETHER_STATE_ERRORED:
+                                case McEthTetherState.TETHER_STATE_ERRORED:
                                     state = "共享失败";
                                     break;
                             }
@@ -250,24 +253,24 @@ public class EthTetherActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mcEthTetherManager.unregisterObserver(iSubnetDevObserver);
+        mcEthTether.unregisterObserver(iSubnetDevObserver);
     }
 
     private void parseError(int errorCode) {
         switch (errorCode) {
-            case EnjoyErrorCode.ENJOY_COMMON_SUCCESSFUL:
+            case McErrorCode.ENJOY_COMMON_SUCCESSFUL:
                 ToastUtils.showShort("成功");
                 break;
-            case EnjoyErrorCode.ENJOY_ETHTETHER_MANAGER_ERROR_INVALID_UPSTREAM:
+            case McErrorCode.ENJOY_ETHTETHER_MANAGER_ERROR_INVALID_UPSTREAM:
                 ToastUtils.showShort("无效的以太网共享源，请在 WIFI 和 4G 中选择");
                 break;
-            case EnjoyErrorCode.ENJOY_ETHTETHER_MANAGER_ERROR_INVALID_CONFIG:
+            case McErrorCode.ENJOY_ETHTETHER_MANAGER_ERROR_INVALID_CONFIG:
                 ToastUtils.showShort("无效的以太网共享配置");
                 break;
-            case EnjoyErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
+            case McErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
                 ToastUtils.showShort("以太网共享服务未启动");
                 break;
-            case EnjoyErrorCode.ENJOY_COMMON_ERROR_UNKNOWN:
+            case McErrorCode.ENJOY_COMMON_ERROR_UNKNOWN:
             default:
                 ToastUtils.showShort("未知错误");
                 break;

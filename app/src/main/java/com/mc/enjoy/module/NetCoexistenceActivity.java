@@ -10,12 +10,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.hzmct.enjoy.R;
-import com.mc.android.enjoy.EnjoyErrorCode;
-import com.mc.android.mcnetcoexist.McNetCoexistenceManager;
+import com.mc.enjoy.R;
+import com.mc.enjoysdk.McNetCoexist;
+import com.mc.enjoysdk.result.McResultBool;
+import com.mc.enjoysdk.transform.McErrorCode;
 
 import java.util.Arrays;
 
@@ -33,7 +33,7 @@ public class NetCoexistenceActivity extends AppCompatActivity {
     private Button btnGetPriority;
     private TextView tvPriority;
 
-    private McNetCoexistenceManager mcNetCoexistenceManager;
+    private McNetCoexist mcNetCoexist;
     private int[] priority;
 
     @Override
@@ -53,10 +53,10 @@ public class NetCoexistenceActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        mcNetCoexistenceManager = (McNetCoexistenceManager) getSystemService(McNetCoexistenceManager.MC_NET_COEXISTENCE_MANAGER);
-        cbNetState.setChecked(mcNetCoexistenceManager.getNetCoexistenceState());
+        mcNetCoexist = McNetCoexist.getInstance(this);
+        cbNetState.setChecked(mcNetCoexist.getNetCoexistenceState() == McResultBool.TRUE);
 
-        priority = mcNetCoexistenceManager.getNetworkSequence();
+        priority = mcNetCoexist.getNetworkSequence();
         updatePriority();
     }
 
@@ -64,7 +64,7 @@ public class NetCoexistenceActivity extends AppCompatActivity {
         cbNetState.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                int ret = mcNetCoexistenceManager.netCoexistenceSwitch(isChecked);
+                int ret = mcNetCoexist.netCoexistenceSwitch(isChecked);
                 parseError(ret);
             }
         });
@@ -87,7 +87,7 @@ public class NetCoexistenceActivity extends AppCompatActivity {
 
                 LogUtils.i(TAG, "netType == " + netType
                         + ", priority == " + spNetPriority.getSelectedItemPosition());
-                priority = mcNetCoexistenceManager.changeNetworkPriority(
+                priority = mcNetCoexist.changeNetworkPriority(
                         netType, spNetPriority.getSelectedItemPosition());
                 LogUtils.i(TAG, "set priority == " + Arrays.toString(priority));
                 updatePriority();
@@ -97,7 +97,7 @@ public class NetCoexistenceActivity extends AppCompatActivity {
         btnGetPriority.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                priority = mcNetCoexistenceManager.getNetworkSequence();
+                priority = mcNetCoexist.getNetworkSequence();
                 LogUtils.i(TAG, "priority == " + Arrays.toString(priority));
                 updatePriority();
             }
@@ -127,7 +127,7 @@ public class NetCoexistenceActivity extends AppCompatActivity {
 
     private void parseError(int errorCode) {
         switch (errorCode) {
-            case EnjoyErrorCode.ENJOY_COMMON_SUCCESSFUL:
+            case McErrorCode.ENJOY_COMMON_SUCCESSFUL:
                 ToastUtils.showShort("成功");
                 break;
             default:

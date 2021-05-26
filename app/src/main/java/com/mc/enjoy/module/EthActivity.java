@@ -15,10 +15,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.hzmct.enjoy.R;
-import com.mc.android.enjoy.EnjoyErrorCode;
 import com.mc.android.mcethernet.McEthernetConfig;
-import com.mc.android.mcethernet.McEthernetManager;
+import com.mc.enjoysdk.transform.McErrorCode;
+import com.mc.enjoysdk.transform.McEthernetState;
+import com.mc.enjoy.R;
+import com.mc.enjoysdk.McEthernet;
+import com.mc.enjoysdk.result.McResultBool;
 
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
@@ -44,10 +46,10 @@ public class EthActivity extends AppCompatActivity {
     private EditText etEthDns1;
     private EditText etEthDns2;
 
-    private McEthernetManager mcEthernetManager;
     private McEthernetConfig mcEthernetConfig;
     private ScheduledFuture ethStateFuture;
     private int curEthMode = McEthernetConfig.DHCP_MODE;
+    private McEthernet mcEthernet;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,10 +72,10 @@ public class EthActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        mcEthernetManager = (McEthernetManager) getSystemService(McEthernetManager.MC_ETHERNET_MANAGER);
-        mcEthernetConfig = mcEthernetManager.getMcEthernetConfig();
+        mcEthernet = McEthernet.getInstance(this);
+        mcEthernetConfig = mcEthernet.getMcEthernetConfig();
 
-        cbEthEnable.setChecked(mcEthernetManager.isEthernetEnable());
+        cbEthEnable.setChecked(mcEthernet.isEthernetEnable() == McResultBool.TRUE);
         setEthInfo();
         loopEthState();
     }
@@ -82,14 +84,14 @@ public class EthActivity extends AppCompatActivity {
         cbEthEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mcEthernetManager.switchEthernet(isChecked);
+                mcEthernet.switchEthernet(isChecked);
             }
         });
 
         btnEthGet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mcEthernetConfig = mcEthernetManager.getMcEthernetConfig();
+                mcEthernetConfig = mcEthernet.getMcEthernetConfig();
                 setEthInfo();
             }
         });
@@ -103,7 +105,7 @@ public class EthActivity extends AppCompatActivity {
                 mcEthernetConfig.setGateway(etEthGateway.getText().toString().trim());
                 mcEthernetConfig.setDns(etEthDns1.getText().toString().trim());
                 mcEthernetConfig.setBackupDns(etEthDns2.getText().toString().trim());
-                int ret = mcEthernetManager.setEthernetConfig(mcEthernetConfig);
+                int ret = mcEthernet.setEthernetConfig(mcEthernetConfig);
                 parseError(ret);
             }
         });
@@ -145,22 +147,22 @@ public class EthActivity extends AppCompatActivity {
             }).scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
-                    int ethState = mcEthernetManager.getEthernetConnectState();
+                    int ethState = mcEthernet.getEthernetConnectState();
                     String state = "";
                     switch (ethState) {
-                        case McEthernetManager.ETHER_STATE_DISCONNECTED:
+                        case McEthernetState.ETHER_STATE_DISCONNECTED:
                             state = "以太网当前已断开连接";
                             break;
-                        case McEthernetManager.ETHER_STATE_CONNECTING:
+                        case McEthernetState.ETHER_STATE_CONNECTING:
                             state = "以太网正在连接中";
                             break;
-                        case McEthernetManager.ETHER_STATE_CONNECTED:
+                        case McEthernetState.ETHER_STATE_CONNECTED:
                             state = "以太网当前已连接";
                             break;
-                        case McEthernetManager.ETHER_STATE_DISCONNECTING:
+                        case McEthernetState.ETHER_STATE_DISCONNECTING:
                             state = "以太网正在断开连接";
                             break;
-                        case McEthernetManager.ETHER_STATE_UNKNOWN:
+                        case McEthernetState.ETHER_STATE_UNKNOWN:
                             state = "以太网连接状态未知";
                             break;
                     }
@@ -182,16 +184,16 @@ public class EthActivity extends AppCompatActivity {
 
     private void parseError(int errorCode) {
         switch (errorCode) {
-            case EnjoyErrorCode.ENJOY_COMMON_SUCCESSFUL:
+            case McErrorCode.ENJOY_COMMON_SUCCESSFUL:
                 ToastUtils.showShort("成功");
                 break;
-            case EnjoyErrorCode.ENJOY_ETHERNET_MANAGER_ERROR_CONFIG_INVALID:
+            case McErrorCode.ENJOY_ETHERNET_MANAGER_ERROR_CONFIG_INVALID:
                 ToastUtils.showShort("以太网配置错误");
                 break;
-            case EnjoyErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
+            case McErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
                 ToastUtils.showShort("以太网配置服务错误");
                 break;
-            case EnjoyErrorCode.ENJOY_ETHERNET_MANAGER_ERROR_ETH_TETHER_IN_USE:
+            case McErrorCode.ENJOY_ETHERNET_MANAGER_ERROR_ETH_TETHER_IN_USE:
                 ToastUtils.showShort("以太网共享使用中");
                 break;
             default:

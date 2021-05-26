@@ -10,12 +10,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
-
 import com.blankj.utilcode.util.ToastUtils;
-import com.hzmct.enjoy.R;
-import com.mc.android.enjoy.EnjoyErrorCode;
-import com.mc.android.mcpower.McPowerManager;
-import com.mc.android.mcrotation.McRotationManager;
+import com.mc.enjoy.R;
+import com.mc.enjoysdk.McPower;
+import com.mc.enjoysdk.McRotation;
+import com.mc.enjoysdk.result.McResultBool;
+import com.mc.enjoysdk.transform.McErrorCode;
 
 public class RotationActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -27,8 +27,8 @@ public class RotationActivity extends AppCompatActivity {
     private Spinner spinnerVice;
     private Spinner spinnerDisplay;
     private CheckBox cbViceFull;
-    private McRotationManager mcRotationManager;
-    private McPowerManager mcPowerManager;
+    private McRotation mcRotation;
+    private McPower mcPower;
     private int curMainPos;
     private int curVicePos;
     private int curDisplayPos;
@@ -46,17 +46,17 @@ public class RotationActivity extends AppCompatActivity {
         spinnerDisplay = findViewById(R.id.spinner_display);
         cbViceFull = findViewById(R.id.cb_vice_full);
 
-        mcRotationManager = (McRotationManager) getSystemService(McRotationManager.MC_ROTATION);
-        mcPowerManager = (McPowerManager) getSystemService(McPowerManager.MC_POWER_MANAGER);
-        cbViceFull.setChecked(mcRotationManager.isViceFull());
+        mcRotation = McRotation.getInstance(this);
+        mcPower = McPower.getInstance(this);
+        cbViceFull.setChecked(mcRotation.isViceFull() == McResultBool.TRUE);
         initPos();
         initListener();
     }
 
     private void initPos() {
-        curMainPos = mcRotationManager.getSystemRotation() / 90;
-        curVicePos = mcRotationManager.getViceRotation() / 90;
-        curDisplayPos = mcRotationManager.getDisplayRotation() / 90;
+        curMainPos = mcRotation.getSystemRotation() / 90;
+        curVicePos = mcRotation.getViceRotation() / 90;
+        curDisplayPos = mcRotation.getDisplayRotation() / 90;
         spinnerMain.setSelection(curMainPos);
         spinnerVice.setSelection(curVicePos);
         spinnerDisplay.setSelection(curDisplayPos);
@@ -66,7 +66,7 @@ public class RotationActivity extends AppCompatActivity {
         btnMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int rotation = mcRotationManager.getSystemRotation();
+                int rotation = mcRotation.getSystemRotation();
                 ToastUtils.showShort("主屏幕角度: " + rotation + ", " + getRotation(rotation));
             }
         });
@@ -74,7 +74,7 @@ public class RotationActivity extends AppCompatActivity {
         btnVice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int rotation = mcRotationManager.getViceRotation();
+                int rotation = mcRotation.getViceRotation();
                 ToastUtils.showShort("副屏幕角度: " + rotation + ", " + getRotation(rotation));
             }
         });
@@ -82,7 +82,7 @@ public class RotationActivity extends AppCompatActivity {
         btnDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int rotation = mcRotationManager.getDisplayRotation();
+                int rotation = mcRotation.getDisplayRotation();
                 ToastUtils.showShort("及时旋转角度: " + rotation + ", " + getRotation(rotation));
             }
         });
@@ -90,7 +90,7 @@ public class RotationActivity extends AppCompatActivity {
         cbViceFull.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mcRotationManager.setViceFull(isChecked);
+                mcRotation.setViceFull(isChecked);
             }
         });
 
@@ -102,10 +102,10 @@ public class RotationActivity extends AppCompatActivity {
                 }
                 curMainPos = position;
 
-                int ret = mcRotationManager.setSystemRotation(position * 90);
+                int ret = mcRotation.setSystemRotation(position * 90);
                 parseError(ret);
 
-                if (ret == EnjoyErrorCode.ENJOY_COMMON_SUCCESSFUL) {
+                if (ret == McErrorCode.ENJOY_COMMON_SUCCESSFUL) {
                     new AlertDialog.Builder(RotationActivity.this)
                             .setTitle("是否重启查看主屏幕方向？")
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -116,7 +116,7 @@ public class RotationActivity extends AppCompatActivity {
                             .setPositiveButton("重启", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    mcPowerManager.reboot();
+                                    mcPower.reboot();
                                 }
                             })
                             .show();
@@ -137,7 +137,7 @@ public class RotationActivity extends AppCompatActivity {
                 }
                 curVicePos = position;
 
-                int ret = mcRotationManager.setViceRotation(position * 90);
+                int ret = mcRotation.setViceRotation(position * 90);
                 parseError(ret);
             }
 
@@ -155,7 +155,7 @@ public class RotationActivity extends AppCompatActivity {
                 }
                 curDisplayPos = position;
 
-                int ret = mcRotationManager.setDisplayRotation(position * 90);
+                int ret = mcRotation.setDisplayRotation(position * 90);
                 parseError(ret);
             }
 
@@ -182,25 +182,25 @@ public class RotationActivity extends AppCompatActivity {
 
     private void parseError(int errorCode) {
         switch (errorCode) {
-            case EnjoyErrorCode.ENJOY_COMMON_SUCCESSFUL:
+            case McErrorCode.ENJOY_COMMON_SUCCESSFUL:
                 ToastUtils.showShort("成功");
                 break;
-            case EnjoyErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
+            case McErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
                 ToastUtils.showShort("屏幕旋转服务未启动");
                 break;
-            case EnjoyErrorCode.ENJOY_ROTATION_MANAGER_ERROR_DISPLAY_ROTATION:
+            case McErrorCode.ENJOY_ROTATION_MANAGER_ERROR_DISPLAY_ROTATION:
                 ToastUtils.showShort("主屏幕旋转错误");
                 break;
-            case EnjoyErrorCode.ENJOY_ROTATION_MANAGER_ERROR_SYSTEM_ROTATION:
+            case McErrorCode.ENJOY_ROTATION_MANAGER_ERROR_SYSTEM_ROTATION:
                 ToastUtils.showShort("临时转屏错误");
                 break;
-            case EnjoyErrorCode.ENJOY_ROTATION_MANAGER_ERROR_VICE_ROTATION:
+            case McErrorCode.ENJOY_ROTATION_MANAGER_ERROR_VICE_ROTATION:
                 ToastUtils.showShort("副屏旋转错误");
                 break;
-            case EnjoyErrorCode.ENJOY_ROTATION_MANAGER_ERROR_VICE_FULL:
+            case McErrorCode.ENJOY_ROTATION_MANAGER_ERROR_VICE_FULL:
                 ToastUtils.showShort("副屏幕全屏错误");
                 break;
-            case EnjoyErrorCode.ENJOY_ROTATION_MANAGER_ERROR_ROTATION_FORMAT:
+            case McErrorCode.ENJOY_ROTATION_MANAGER_ERROR_ROTATION_FORMAT:
                 ToastUtils.showShort("旋转角度参数格式错误");
                 break;
             default:

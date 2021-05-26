@@ -9,11 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-
 import com.blankj.utilcode.util.ToastUtils;
-import com.hzmct.enjoy.R;
-import com.mc.android.enjoy.EnjoyErrorCode;
-import com.mc.android.mcsecure.McSecureManager;
+import com.mc.enjoy.R;
+import com.mc.enjoysdk.McSecure;
+import com.mc.enjoysdk.result.McResultBool;
+import com.mc.enjoysdk.transform.McErrorCode;
+import com.mc.enjoysdk.transform.McSecurePasswordState;
 
 /**
  * @author Woong on 1/30/21
@@ -31,7 +32,7 @@ public class SecureActivity extends AppCompatActivity {
     private EditText etPwdNew;
     private EditText etPwdOld;
 
-    private McSecureManager mcSecureManager;
+    private McSecure mcSecure;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,25 +53,25 @@ public class SecureActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        mcSecureManager = (McSecureManager) getSystemService(McSecureManager.MC_SECURE_MANAGER);
+        mcSecure = McSecure.getInstance(this);
 
-        cbPwd.setChecked(mcSecureManager.checkSafeProgramOfSelf());
+        cbPwd.setChecked(mcSecure.checkSafeProgramOfSelf() == McResultBool.TRUE);
     }
 
     private void initListener() {
         btnPwdState.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int state = mcSecureManager.getSecurePasswdStatus();
+                int state = mcSecure.getSecurePasswdStatus();
 
                 switch (state) {
-                    case McSecureManager.MC_SECURE_PASSWD_EMPTY:
+                    case McSecurePasswordState.MC_SECURE_PASSWD_EMPTY:
                         ToastUtils.showShort("密码为空");
                         break;
-                    case McSecureManager.MC_SECURE_PASSWD_EXISTED:
+                    case McSecurePasswordState.MC_SECURE_PASSWD_EXISTED:
                         ToastUtils.showShort("密码已设置");
                         break;
-                    case McSecureManager.MC_SECURE_PASSWD_UNKNOWN:
+                    case McSecurePasswordState.MC_SECURE_PASSWD_UNKNOWN:
                         ToastUtils.showShort("未知状态");
                         break;
                 }
@@ -90,7 +91,7 @@ public class SecureActivity extends AppCompatActivity {
                     return;
                 }
 
-                int ret = mcSecureManager.setSecurePasswd(etPwdOld.getText().toString().trim(),
+                int ret = mcSecure.setSecurePasswd(etPwdOld.getText().toString().trim(),
                         etPwdNew.getText().toString().trim());
                 parseError(ret);
             }
@@ -104,7 +105,7 @@ public class SecureActivity extends AppCompatActivity {
                     return;
                 }
 
-                int ret = mcSecureManager.resetSecurePasswd(etPwdOld.getText().toString().trim());
+                int ret = mcSecure.resetSecurePasswd(etPwdOld.getText().toString().trim());
                 parseError(ret);
             }
         });
@@ -117,7 +118,7 @@ public class SecureActivity extends AppCompatActivity {
                     return;
                 }
 
-                int ret = mcSecureManager.registSafeProgram(etPwdOld.getText().toString().trim());
+                int ret = mcSecure.registSafeProgram(etPwdOld.getText().toString().trim());
                 parseError(ret);
             }
         });
@@ -125,47 +126,46 @@ public class SecureActivity extends AppCompatActivity {
         btnPwdUnregister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int ret = mcSecureManager.unregistSafeProgram();
+                int ret = mcSecure.unregistSafeProgram();
                 parseError(ret);
-                cbPwd.setChecked(mcSecureManager.checkSafeProgramOfSelf());
+                cbPwd.setChecked(mcSecure.checkSafeProgramOfSelf() == McResultBool.TRUE);
             }
         });
     }
 
-
     private void parseError(int ret){
         switch (ret){
-            case EnjoyErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_ALREADY_EMPYT:
+            case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_ALREADY_EMPYT:
                 Log.e(TAG, "errorDump: 密码已经为空");
                 break;
-            case EnjoyErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_CHECK_FAILED:
+            case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_CHECK_FAILED:
                 Log.e(TAG, "errorDump: 密码检查不通过");
                 break;
-            case EnjoyErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_FORMAT_ERROR:
+            case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_FORMAT_ERROR:
                 Log.e(TAG, "errorDump: 密码格式错误");
                 break;
-            case EnjoyErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_SET_FAILED:
+            case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_SET_FAILED:
                 Log.e(TAG, "errorDump: 密码设置失败");
                 break;
-            case EnjoyErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
+            case McErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
                 Log.e(TAG, "errorDump: 服务错误");
                 break;
-            case EnjoyErrorCode.ENJOY_COMMON_SUCCESSFUL:
+            case McErrorCode.ENJOY_COMMON_SUCCESSFUL:
                 Log.e(TAG, "errorDump: 成功");
                 break;
-            case EnjoyErrorCode.ENJOY_SECURE_MANAGER_ERROR_PROGRAM_ALREADY_IN_SAFE_PROGRAM_LIST:
+            case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_PROGRAM_ALREADY_IN_SAFE_PROGRAM_LIST:
                 Log.e(TAG, "errorDump: 已经在安全应用列表内");
                 break;
-            case EnjoyErrorCode.ENJOY_SECURE_MANAGER_ERROR_PROGRAM_NOT_IN_SAFE_PROGRAM_LIST:
+            case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_PROGRAM_NOT_IN_SAFE_PROGRAM_LIST:
                 Log.e(TAG, "errorDump: 不在安全应用列表内");
                 break;
-            case EnjoyErrorCode.ENJOY_SECURE_MANAGER_ERROR_REGISTER_SAFE_PROGRAM_FAILED:
+            case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_REGISTER_SAFE_PROGRAM_FAILED:
                 Log.e(TAG, "errorDump: 注册安全应用失败");
                 break;
-            case EnjoyErrorCode.ENJOY_SECURE_MANAGER_ERROR_UNREGISTER_SAFE_PROGRAM_FAILED:
+            case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_UNREGISTER_SAFE_PROGRAM_FAILED:
                 Log.e(TAG, "errorDump: 注销安全应用失败");
                 break;
-            case EnjoyErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_NOT_INIT:
+            case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_NOT_INIT:
                 Log.e(TAG, "errorDump: 鉴权密码未初始化");
                 break;
             default:

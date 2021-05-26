@@ -11,15 +11,16 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
-
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.hzmct.enjoy.R;
-import com.mc.android.enjoy.EnjoyErrorCode;
-import com.mc.android.mctime.McTimeManager;
+import com.mc.enjoy.R;
+import com.mc.enjoysdk.McTime;
+import com.mc.enjoysdk.result.McResultBool;
+import com.mc.enjoysdk.transform.McErrorCode;
+import com.mc.enjoysdk.transform.McTimeFormat;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -44,7 +45,7 @@ public class TimeActivity extends AppCompatActivity {
     private TimePickerView timePickerView;
     private TimePickerView datePickerView;
 
-    private McTimeManager mcTimeManager;
+    private McTime mcTime;
     private String[] timezones;
 
     @Override
@@ -84,7 +85,7 @@ public class TimeActivity extends AppCompatActivity {
 
                 Log.i(TAG, "hour == " + hour + ", minute == " + minute +
                         ", second == " + second + ", millisecond == " + millisecond);
-                int ret = mcTimeManager.setTime(hour, minute, second, millisecond);
+                int ret = mcTime.setTime(hour, minute, second, millisecond);
                 parseError(ret);
             }
         })
@@ -105,19 +106,19 @@ public class TimeActivity extends AppCompatActivity {
                 int month = calendar.get(Calendar.MONTH) + 1;
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
                 Log.i(TAG, "year == " + year + ", month == " + month + ", day == " + day);
-                int ret = mcTimeManager.setDate(year, month, day);
+                int ret = mcTime.setDate(year, month, day);
                 parseError(ret);
             }
         })
                 .setType(new boolean[]{true, true, true, false, false, false})
                 .build();
 
-        mcTimeManager = (McTimeManager) getSystemService(McTimeManager.MC_TIME_MANAGER);
-        cbAutoDateTime.setChecked(mcTimeManager.isAutoDateAndTime());
-        cbAutoTimeZone.setChecked(mcTimeManager.isAutoTimeZone());
-        cbTimeFormat.setChecked(mcTimeManager.getCurrentTimeFormat() == McTimeManager.HOUR_24);
-        etNtpAddress.setText(mcTimeManager.getNtpServerAddressInUse());
-        etNtpTimeOut.setText(String.valueOf(mcTimeManager.getNtpTimeout()));
+        mcTime = McTime.getInstance(this);
+        cbAutoDateTime.setChecked(mcTime.isAutoDateAndTime() == McResultBool.TRUE);
+        cbAutoTimeZone.setChecked(mcTime.isAutoTimeZone() == McResultBool.TRUE);
+        cbTimeFormat.setChecked(mcTime.getCurrentTimeFormat() == McTimeFormat.HOUR_24);
+        etNtpAddress.setText(mcTime.getNtpServerAddressInUse());
+        etNtpTimeOut.setText(String.valueOf(mcTime.getNtpTimeout()));
 
         timezones = getResources().getStringArray(R.array.time_zone);
     }
@@ -126,7 +127,7 @@ public class TimeActivity extends AppCompatActivity {
         cbAutoDateTime.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                int ret = mcTimeManager.switchAutoDateAndTime(isChecked);
+                int ret = mcTime.switchAutoDateAndTime(isChecked);
                 parseError(ret);
             }
         });
@@ -134,7 +135,7 @@ public class TimeActivity extends AppCompatActivity {
         cbAutoTimeZone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                int ret = mcTimeManager.switchAutoTimeZone(isChecked);
+                int ret = mcTime.switchAutoTimeZone(isChecked);
                 parseError(ret);
             }
         });
@@ -142,7 +143,7 @@ public class TimeActivity extends AppCompatActivity {
         cbTimeFormat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                int ret = mcTimeManager.setTimeFormat(isChecked ? McTimeManager.HOUR_24 : McTimeManager.HOUR_12);
+                int ret = mcTime.setTimeFormat(isChecked ? McTimeFormat.HOUR_24 : McTimeFormat.HOUR_12);
                 parseError(ret);
             }
         });
@@ -164,7 +165,7 @@ public class TimeActivity extends AppCompatActivity {
         spinnerTimeZone.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int ret = mcTimeManager.setTimeZone(timezones[position]);
+                int ret = mcTime.setTimeZone(timezones[position]);
                 parseError(ret);
             }
 
@@ -187,12 +188,12 @@ public class TimeActivity extends AppCompatActivity {
 
                         String address = etNtpAddress.getText().toString().trim();
                         long timeOut = Long.parseLong(etNtpTimeOut.getText().toString().trim());
-                        if (!mcTimeManager.checkNtpServerAddressAvailable(address, timeOut)) {
+                        if (mcTime.checkNtpServerAddressAvailable(address, timeOut) != McResultBool.TRUE) {
                             ToastUtils.showShort("NTP 配置参数错误");
                             return;
                         }
 
-                        int ret = mcTimeManager.setNtpServerAddress(address, timeOut);
+                        int ret = mcTime.setNtpServerAddress(address, timeOut);
                         parseError(ret);
                     }
                 });
@@ -202,28 +203,28 @@ public class TimeActivity extends AppCompatActivity {
 
     private void parseError(int errorCode) {
         switch (errorCode) {
-            case EnjoyErrorCode.ENJOY_COMMON_SUCCESSFUL:
+            case McErrorCode.ENJOY_COMMON_SUCCESSFUL:
                 ToastUtils.showShort("成功");
                 break;
-            case EnjoyErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
+            case McErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
                 ToastUtils.showShort("服务错误");
                 break;
-            case EnjoyErrorCode.ENJOY_TIME_MANAGER_ERROR_PARAMETER_ERROR:
+            case McErrorCode.ENJOY_TIME_MANAGER_ERROR_PARAMETER_ERROR:
                 ToastUtils.showShort("配置参数错误");
                 break;
-            case EnjoyErrorCode.ENJOY_TIME_MANAGER_ERROR_FUNCTION_OCCUPY:
+            case McErrorCode.ENJOY_TIME_MANAGER_ERROR_FUNCTION_OCCUPY:
                 ToastUtils.showShort("手动自动配置冲突");
                 break;
-            case EnjoyErrorCode.ENJOY_COMMON_ERROR_UNKNOWN:
+            case McErrorCode.ENJOY_COMMON_ERROR_UNKNOWN:
                 ToastUtils.showShort("NTP 未知错误");
                 break;
-            case EnjoyErrorCode.ENJOY_TIME_MANAGER_ERROR_NTP_SERVER_ADDRESS_SET_FAILED:
+            case McErrorCode.ENJOY_TIME_MANAGER_ERROR_NTP_SERVER_ADDRESS_SET_FAILED:
                 ToastUtils.showShort("NTP 服务地址设置错误");
                 break;
-            case EnjoyErrorCode.ENJOY_TIME_MANAGER_ERROR_NTP_TIMEOUT_SET_FAILED:
+            case McErrorCode.ENJOY_TIME_MANAGER_ERROR_NTP_TIMEOUT_SET_FAILED:
                 ToastUtils.showShort("NTP 超时时间设置错误");
                 break;
-            case EnjoyErrorCode.ENJOY_TIME_MANAGER_ERROR_NTP_CONFIG_SET_FAILED:
+            case McErrorCode.ENJOY_TIME_MANAGER_ERROR_NTP_CONFIG_SET_FAILED:
                 ToastUtils.showShort("NTP 设置错误");
                 break;
             default:
