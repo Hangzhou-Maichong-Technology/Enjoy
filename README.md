@@ -22,7 +22,7 @@ allprojects {
 2. 添加 EnjoySdk 依赖
 ```
   // 添加 EnjoySDK gradle 依赖
-  implementation 'com.github.Hangzhou-Maichong-Technology:Enjoy:1.0.0'
+  implementation 'com.github.Hangzhou-Maichong-Technology:Enjoy:1.0.1'
 ```
 
 ### 本地 aar 依赖
@@ -52,5 +52,7 @@ mcSecure.registSafeProgram("Abc12345");
 ![EnjoySdkJavaDoc](https://github.com/Hangzhou-Maichong-Technology/Enjoy/raw/master/doc/EnjoySDK%20JavaDoc.png)
 
 ## 更新日志
+- 2021/06/01: EnjoySDK 1.0.1 正式发布。
+  修复 McInstall 调用异常。
 - 2021/05/26: EnjoySDK 1.0.0 正式发布。
   提供丰富的 Android 硬件控制接口。

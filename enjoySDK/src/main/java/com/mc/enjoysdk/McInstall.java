@@ -74,7 +74,7 @@ public class McInstall {
             return McErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START;
         }
 
-        return whiteListSwitch(enable);
+        return mcInstallManager.whiteListSwitch(enable);
     }
 
     /**
