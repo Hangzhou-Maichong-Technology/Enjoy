@@ -36,6 +36,7 @@ public class EthActivity extends AppCompatActivity {
     private static final String TAG = "EthActivity";
 
     private CheckBox cbEthEnable;
+    private TextView tvHwAddr;
     private TextView tvConnect;
     private Button btnEthGet;
     private Button btnEthSet;
@@ -57,6 +58,7 @@ public class EthActivity extends AppCompatActivity {
         setContentView(R.layout.activity_eth);
 
         cbEthEnable = findViewById(R.id.cb_enable);
+        tvHwAddr = findViewById(R.id.tv_hw_addr);
         tvConnect = findViewById(R.id.tv_connect);
         btnEthGet = findViewById(R.id.btn_get_eth);
         btnEthSet = findViewById(R.id.btn_set_eth);
@@ -76,6 +78,7 @@ public class EthActivity extends AppCompatActivity {
         mcEthernetConfig = mcEthernet.getMcEthernetConfig();
 
         cbEthEnable.setChecked(mcEthernet.isEthernetEnable() == McResultBool.TRUE);
+        tvHwAddr.setText(String.format(getString(R.string.eth_hw_addr), mcEthernet.getEthernetMacAddress("eth1")));
         setEthInfo();
         loopEthState();
     }

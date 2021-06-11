@@ -13,6 +13,7 @@
     <string name="eth_dns1">DNS 1:</string>
     <string name="eth_dns2">DNS 2:</string>
     <string name="eth_state">以太网状态: %1$s</string>
+    <string name="eth_hw_addr">以太网 MAC 地址: %1$s</string>
     <string name="factory">供应商 : %1$s</string>
     <string name="product">产品型号 : %1$s</string>
     <string name="special">定制信息 : %1$s</string>
