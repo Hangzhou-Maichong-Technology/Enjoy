@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -78,7 +79,7 @@ public class EthActivity extends AppCompatActivity {
         mcEthernetConfig = mcEthernet.getMcEthernetConfig();
 
         cbEthEnable.setChecked(mcEthernet.isEthernetEnable() == McResultBool.TRUE);
-        tvHwAddr.setText(String.format(getString(R.string.eth_hw_addr), mcEthernet.getEthernetMacAddress("eth1")));
+        setMacAddress();
         setEthInfo();
         loopEthState();
     }
@@ -123,6 +124,14 @@ public class EthActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+    }
+
+    private void setMacAddress() {
+        String mac = mcEthernet.getEthernetMacAddress("eth0");
+        if (TextUtils.isEmpty(mac)) {
+            mac = mcEthernet.getEthernetMacAddress("eth1");
+        }
+        tvHwAddr.setText(String.format(getString(R.string.eth_hw_addr), mac));
     }
 
     private void setEthInfo() {
