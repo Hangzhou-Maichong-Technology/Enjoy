@@ -233,11 +233,20 @@ public class EthTetherActivity extends AppCompatActivity {
                                 case McEthTetherState.TETHER_STATE_AVAILABLE:
                                     state = "可以共享但未共享";
                                     break;
+                                case McEthTetherState.TETHER_STATE_UNAVAILABLE:
+                                    state = "共享不可用";
+                                    break;
                                 case McEthTetherState.TETHER_STATE_TETHERED:
                                     state = "已共享";
                                     break;
                                 case McEthTetherState.TETHER_STATE_ERRORED:
                                     state = "共享失败";
+                                    break;
+                                case McEthTetherState.TETHER_STATE_INVALID_UPSTREAM:
+                                    state = "共享源不可用";
+                                    break;
+                                default:
+                                    state = "未知状态";
                                     break;
                             }
                             tvTetherState.setText(String.format(getResources().getString(R.string.tether_state), state));
