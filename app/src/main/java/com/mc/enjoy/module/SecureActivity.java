@@ -1,7 +1,9 @@
 package com.mc.enjoy.module;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -120,15 +122,30 @@ public class SecureActivity extends AppCompatActivity {
 
                 int ret = mcSecure.registSafeProgram(etPwdOld.getText().toString().trim());
                 parseError(ret);
+                cbPwd.setChecked(mcSecure.checkSafeProgramOfSelf() == McResultBool.TRUE);
             }
         });
 
         btnPwdUnregister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int ret = mcSecure.unregistSafeProgram();
-                parseError(ret);
-                cbPwd.setChecked(mcSecure.checkSafeProgramOfSelf() == McResultBool.TRUE);
+                new AlertDialog.Builder(SecureActivity.this)
+                        .setMessage("注销权限密码会导致其他功能崩溃，是否继续注销？")
+                        .setPositiveButton("注销", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                int ret = mcSecure.unregistSafeProgram();
+                                parseError(ret);
+                                cbPwd.setChecked(mcSecure.checkSafeProgramOfSelf() == McResultBool.TRUE);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
             }
         });
     }
@@ -137,39 +154,51 @@ public class SecureActivity extends AppCompatActivity {
         switch (ret){
             case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_ALREADY_EMPYT:
                 Log.e(TAG, "errorDump: 密码已经为空");
+                ToastUtils.showShort("密码已经为空");
                 break;
             case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_CHECK_FAILED:
                 Log.e(TAG, "errorDump: 密码检查不通过");
+                ToastUtils.showShort("密码检查不通过");
                 break;
             case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_FORMAT_ERROR:
                 Log.e(TAG, "errorDump: 密码格式错误");
+                ToastUtils.showShort("密码格式错误");
                 break;
             case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_SET_FAILED:
                 Log.e(TAG, "errorDump: 密码设置失败");
+                ToastUtils.showShort("密码设置失败");
                 break;
             case McErrorCode.ENJOY_COMMON_ERROR_SERVICE_NOT_START:
                 Log.e(TAG, "errorDump: 服务错误");
+                ToastUtils.showShort("服务错误");
                 break;
             case McErrorCode.ENJOY_COMMON_SUCCESSFUL:
                 Log.e(TAG, "errorDump: 成功");
+                ToastUtils.showShort("成功");
                 break;
             case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_PROGRAM_ALREADY_IN_SAFE_PROGRAM_LIST:
                 Log.e(TAG, "errorDump: 已经在安全应用列表内");
+                ToastUtils.showShort("已经在安全应用列表内");
                 break;
             case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_PROGRAM_NOT_IN_SAFE_PROGRAM_LIST:
                 Log.e(TAG, "errorDump: 不在安全应用列表内");
+                ToastUtils.showShort("不在安全应用列表内");
                 break;
             case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_REGISTER_SAFE_PROGRAM_FAILED:
                 Log.e(TAG, "errorDump: 注册安全应用失败");
+                ToastUtils.showShort("注册安全应用失败");
                 break;
             case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_UNREGISTER_SAFE_PROGRAM_FAILED:
                 Log.e(TAG, "errorDump: 注销安全应用失败");
+                ToastUtils.showShort("注销安全应用失败");
                 break;
             case McErrorCode.ENJOY_SECURE_MANAGER_ERROR_PASSWD_NOT_INIT:
                 Log.e(TAG, "errorDump: 鉴权密码未初始化");
+                ToastUtils.showShort("鉴权密码未初始化");
                 break;
             default:
                 Log.e(TAG, "errorDump: 没有返回值解析");
+                ToastUtils.showShort("没有返回值解析");
                 break;
         }
     }
