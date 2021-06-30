@@ -1,4 +1,4 @@
-# EnjoySDK V1.0.0 
+# EnjoySDK 
 
 ## 项目概要
 EnjoySDK 是基于杭州迈冲科技 Android 智能设备系统开发的一套方便客户进行二次开发的 SDK。拥有丰富的 Android 硬件控制接口，满足行业应用开发。
